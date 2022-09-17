@@ -1,6 +1,4 @@
-const { combinationsWithRep } = require('mathjs'); 
-
-class Weight {
+class Plate {
     constructor(weight, width, type) {
         this.weight = weight;
         this.width = width;
@@ -12,60 +10,54 @@ class Weight {
     }
 }
 
-class WeightSet {
-    constructor(weights = []) {
-        this.weights = weights;
+class PlateSet {
+    constructor(plates = []) {
+        this.plates = plates;
     }
 
     get totalWeight() {
-        return weights.reduce((accumulator, current) => accumulator + current.weight, 0);
+        return this.plates.reduce((accumulator, current) => accumulator + current.weight, 0);
     }
 
     get totalWidth() {
-        return weights.reduce((accumulator, current) => accumulator + current.width, 0);
-    }
-
-    addWeight(weight) {
-        this.weights.push(weight);
+        return this.plates.reduce((accumulator, current) => accumulator + current.width, 0);
     }
 }
 
-const weights = [
-    new Weight(1.25, 0.39, 'change'),
-    new Weight(2.5, 0.59, 'change'),
-    new Weight(5, 0.75, 'change'),
-    new Weight(10, 1.02, 'change'),
-    new Weight(10, 0.83, 'bumper'),
-    new Weight(15, 1.04, 'bumper'),
-    new Weight(25, 1.5, 'bumper'),
-    new Weight(35, 1.93, 'bumper'),
-    new Weight(45, 2.36, 'bumper'),
-    new Weight(55, 2.75, 'bumper')
-]
+const plateOptions = new PlateSet([
+    new Plate(1.25, 0.39, 'change'),
+    new Plate(2.5, 0.59, 'change'),
+    new Plate(5, 0.75, 'change'),
+    new Plate(10, 1.02, 'change'),
+    new Plate(10, 0.83, 'bumper'),
+    new Plate(15, 1.04, 'bumper'),
+    new Plate(25, 1.5, 'bumper'),
+    new Plate(35, 1.93, 'bumper'),
+    new Plate(45, 2.36, 'bumper'),
+    new Plate(55, 2.75, 'bumper')
+]);
 
 const sleeveLength = 15;
 
-const myWeights = new WeightSet(weights);
-
-const testSet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
-const subsetLength = 6;
-
-function getSubsets(set, subsetLength, currentSubset = [], allSubsets = []) {
+function combosWithRep(set, comboLength, currentCombo = [], allCombos = []) {
     set = set.slice();
     while (true) {
-        if (subsetLength === 0) {
-            allSubsets.push(currentSubset);
-            return allSubsets;
+        if (comboLength === 0) {
+            allCombos.push(currentCombo);
+            return allCombos;
         } else if (set.length === 0) {
-            return allSubsets;
+            return allCombos;
         } else {
-            getSubsets(set, subsetLength - 1, currentSubset.concat(set[0]), allSubsets);
+            combosWithRep(set, comboLength - 1, currentCombo.concat(set[0]), allCombos);
             set.shift();
         }
     }
 }
 
-const testReturn = getSubsets(testSet, subsetLength);
-console.log(testReturn);
-console.log(testReturn.length);
-console.log('check: ' + combinationsWithRep(testSet.length, subsetLength));
+function combosWithRepMaxLength(set, maxComboLength) {
+    const allCombos = [];
+    for (let comboLength = 0; comboLength <= maxComboLength; comboLength++) {
+        allCombos.push(...combosWithRep(set, comboLength));
+    }
+    return allCombos;
+}
