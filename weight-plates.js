@@ -51,18 +51,6 @@ const testSet = ['A', 'B', 'C', 'D', 'E'];
 
 const allSubsets = [];
 
-// function getSubsets(set, subsetLength, depth = 0, currentSubset = []) {
-//     do {
-//         if (subsetLength <= 0) {
-//             allSubsets.push(currentSubset);
-//             return;
-//         } else {
-//             getSubsets(set, subsetLength - 1, depth, currentSubset.concat(set[depth]));
-//             depth++;
-//         }
-//     } while (depth < set.length)
-// }
-
 function getSubsets(set, subsetLength, currentSubset = []) {
     while (true) {
         if (subsetLength === 0) {
