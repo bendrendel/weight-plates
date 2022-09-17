@@ -1,3 +1,5 @@
+const { combinationsWithRep } = require('mathjs'); 
+
 class Weight {
     constructor(weight, width, type) {
         this.weight = weight;
@@ -45,28 +47,25 @@ const sleeveLength = 15;
 
 const myWeights = new WeightSet(weights);
 
-console.log(myWeights.totalWidth);
+const testSet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+const subsetLength = 6;
 
-const testSet = ['A', 'B', 'C', 'D', 'E'];
-
-const allSubsets = [];
-
-function getSubsets(set, subsetLength, currentSubset = []) {
+function getSubsets(set, subsetLength, currentSubset = [], allSubsets = []) {
+    set = set.slice();
     while (true) {
         if (subsetLength === 0) {
             allSubsets.push(currentSubset);
-            return;
+            return allSubsets;
         } else if (set.length === 0) {
-            return;
+            return allSubsets;
         } else {
-            getSubsets(set.slice(), subsetLength - 1, currentSubset.concat(set[0]));
+            getSubsets(set, subsetLength - 1, currentSubset.concat(set[0]), allSubsets);
             set.shift();
         }
     }
 }
 
-getSubsets(['A','B','C','D','E'], 2);
-
-allSubsets.forEach((subset, idx) => {
-    console.log((idx + 1) + ': [' + subset.reduce((accum, currVal) => accum + currVal, '') + ']');
-})
+const testReturn = getSubsets(testSet, subsetLength);
+console.log(testReturn);
+console.log(testReturn.length);
+console.log('check: ' + combinationsWithRep(testSet.length, subsetLength));

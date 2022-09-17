@@ -1,0 +1,22 @@
+{
+  "name": "weight-plates",
+  "version": "1.0.0",
+  "description": "",
+  "main": "weight-plates.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bendrendel/weight-plates.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bendrendel/weight-plates/issues"
+  },
+  "homepage": "https://github.com/bendrendel/weight-plates#readme",
+  "dependencies": {
+    "mathjs": "^11.2.1"
+  }
+}
