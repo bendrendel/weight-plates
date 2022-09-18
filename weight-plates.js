@@ -1,3 +1,5 @@
+const { combinationsWithRep, round } = require('mathjs');
+
 class Plate {
     constructor(weight, width, type) {
         this.weight = weight;
@@ -15,12 +17,53 @@ class PlateSet {
         this.plates = plates;
     }
 
+    get numPlates() {
+        return this.plates.length;
+    }
+
     get totalWeight() {
-        return this.plates.reduce((accumulator, current) => accumulator + current.weight, 0);
+        return round(this.plates.reduce((accumulator, current) => accumulator + current.weight, 0), 2);
     }
 
     get totalWidth() {
-        return this.plates.reduce((accumulator, current) => accumulator + current.width, 0);
+        return round(this.plates.reduce((accumulator, current) => accumulator + current.width, 0), 2);
+    }
+}
+
+// function combosWithRep(set, comboLength, depth = 0, currentCombo = [], allCombos = []) {
+//     while (true) {
+//         if (comboLength === 0) {
+//             allCombos.push(currentCombo);
+//             return allCombos;
+//         } else if (depth === set.length) {
+//             return allCombos;
+//         } else {
+//             combosWithRep(set, comboLength - 1, depth, currentCombo.concat(set[depth]), allCombos);
+//             depth++;
+//         }
+//     }
+// }
+
+// function combosWithRepMaxLength(set, maxComboLength) {
+//     const allCombos = [];
+//     for (let comboLength = 0; comboLength <= maxComboLength; comboLength++) {
+//         allCombos.push(...combosWithRep(set, comboLength));
+//     }
+//     return allCombos;
+// }
+
+function plateCombosWithRep(plateOptions, sleeveLength, depth = 0, currentCombo = new PlateSet(), allCombos = []) {
+    while (true) {
+        if (currentCombo.totalWidth > sleeveLength) {
+            return;
+        } else if (depth === plateOptions.numPlates) {
+            allCombos.push(currentCombo);
+            return allCombos;
+        } else {
+            const nextCombo = new PlateSet([...currentCombo.plates, plateOptions.plates[depth]]);
+            plateCombosWithRep(plateOptions, sleeveLength, depth, nextCombo, allCombos);
+            depth++;
+        }
     }
 }
 
@@ -39,25 +82,6 @@ const plateOptions = new PlateSet([
 
 const sleeveLength = 15;
 
-function combosWithRep(set, comboLength, currentCombo = [], allCombos = []) {
-    set = set.slice();
-    while (true) {
-        if (comboLength === 0) {
-            allCombos.push(currentCombo);
-            return allCombos;
-        } else if (set.length === 0) {
-            return allCombos;
-        } else {
-            combosWithRep(set, comboLength - 1, currentCombo.concat(set[0]), allCombos);
-            set.shift();
-        }
-    }
-}
+const testPlateCombos = plateCombosWithRep(plateOptions, 5);
 
-function combosWithRepMaxLength(set, maxComboLength) {
-    const allCombos = [];
-    for (let comboLength = 0; comboLength <= maxComboLength; comboLength++) {
-        allCombos.push(...combosWithRep(set, comboLength));
-    }
-    return allCombos;
-}
+console.log(testPlateCombos.map((combo, idx) => `Combo ${idx + 1}: ${combo.numPlates} plates, ${combo.totalWeight} lbs, ${combo.totalWidth} in`))
