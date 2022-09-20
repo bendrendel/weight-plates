@@ -1,6 +1,9 @@
 const fs = require('fs');
 const { combinationsWithRep, round } = require('mathjs');
 
+const startTime = new Date();
+console.log('start:' + startTime.toString());
+
 class Plate {
     constructor(weight, width, type) {
         this.weight = weight;
@@ -131,9 +134,9 @@ const plateOptions = new PlateSet([
     new Plate(55, 2.75, 'bumper')
 ]);
 
-const sleeveLength = 15;
+const sleeveLength = 5;
 
-const allPlateCombos = plateCombosWithRep(plateOptions, 5);
+const allPlateCombos = plateCombosWithRep(plateOptions, sleeveLength);
 
 const allPlateCombosByWeight = [...new Set(allPlateCombos.map(plateSet => plateSet.totalWeight))].map(weight => ({ weight: weight, plateCombos: [] }));
 
@@ -169,14 +172,23 @@ function allSolutions(combosByWeight, solutionSet) {
 
 allSolutions(allPlateCombosByWeight, new PlateSet([]));
 
-console.log(solutions.length);
 solutions.sort((a, b) => a.totalPlates - b.totalPlates === 0 ? a.totalWeight - b.totalWeight : a.totalPlates - b.totalPlates).forEach(plateSet => plateSet.plates.sort((a, b) => a.weight - b.weight));
 
-const data = JSON.stringify(solutions.map(a=>a.toString), null, 4);
+const solutionData = JSON.stringify(solutions, null, 4);
+const combosData = JSON.stringify(allPlateCombosByWeight.sort((a,b) => a.weight - b.weight), null, 4);
 
-fs.writeFile('solutions5.json', data, (err) => {
+fs.writeFile('./data/solutions.json', solutionData, (err) => {
     if (err) {
         throw err;
     }
-    console.log("JSON data is saved.");
+    console.log("solutions data is saved.");
+});
+
+fs.writeFile('./data/combos.json', combosData, (err) => {
+    if (err) {
+        throw err;
+    }
+    console.log("combos data is saved.");
+    const endTime = new Date();
+    console.log('end: ' + endTime.toString(), 'duration: ' + new Date((endTime - startTime)).toISOString().slice(11, -1))
 });
