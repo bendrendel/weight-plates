@@ -138,51 +138,19 @@ const sleeveLength = 5;
 
 const allPlateCombos = plateCombosWithRep(plateOptions, sleeveLength);
 
-const allPlateCombosByWeight = [...new Set(allPlateCombos.map(plateSet => plateSet.totalWeight))].map(weight => ({ weight: weight, plateCombos: [] }));
+// const allPlateCombosByWeight = [...new Set(allPlateCombos.map(plateSet => plateSet.totalWeight))].map(weight => ({ weight: weight, plateCombos: [] }));
 
-allPlateCombos.forEach(plateSet => {
-    const index = allPlateCombosByWeight.findIndex(comboWeight => comboWeight.weight === plateSet.totalWeight);
-    allPlateCombosByWeight[index].plateCombos.push(plateSet);
-});
+// allPlateCombos.forEach(plateSet => {
+//     const index = allPlateCombosByWeight.findIndex(comboWeight => comboWeight.weight === plateSet.totalWeight);
+//     allPlateCombosByWeight[index].plateCombos.push(plateSet);
+// });
 
-allPlateCombosByWeight.sort((a, b) => {
-    const lengthDiff = a.plateCombos.length - b.plateCombos.length;
-    return lengthDiff === 0 ? b.weight - a.weight : lengthDiff;
-});
+// allPlateCombosByWeight.sort((a, b) => {
+//     const lengthDiff = a.plateCombos.length - b.plateCombos.length;
+//     return lengthDiff === 0 ? b.weight - a.weight : lengthDiff;
+// });
 
-
-const solutions = [];
-
-function allSolutions(combosByWeight, solutionSet) {
-    const nextCombosByWeight = combosByWeight.filter(element => {
-        return !element.plateCombos.some(combo => solutionSet.contains(combo))
-    })
-
-    if (nextCombosByWeight.length === 0) {
-        solutions.push(solutionSet);
-        return;
-    } else {
-        nextCombosByWeight[0].plateCombos.forEach(plateCombo => {
-            const nextSolutionSet = new PlateSet([...solutionSet.plates]);
-            nextSolutionSet.merge(plateCombo);
-            allSolutions(nextCombosByWeight, nextSolutionSet);
-        })        
-    }
-}
-
-allSolutions(allPlateCombosByWeight, new PlateSet([]));
-
-solutions.sort((a, b) => a.totalPlates - b.totalPlates === 0 ? a.totalWeight - b.totalWeight : a.totalPlates - b.totalPlates).forEach(plateSet => plateSet.plates.sort((a, b) => a.weight - b.weight));
-
-const solutionData = JSON.stringify(solutions, null, 4);
-const combosData = JSON.stringify(allPlateCombosByWeight.sort((a,b) => a.weight - b.weight), null, 4);
-
-fs.writeFile('./data/solutions.json', solutionData, (err) => {
-    if (err) {
-        throw err;
-    }
-    console.log("solutions data is saved.");
-});
+const combosData = JSON.stringify(allPlateCombos, null, 4);
 
 fs.writeFile('./data/combos.json', combosData, (err) => {
     if (err) {
@@ -192,3 +160,37 @@ fs.writeFile('./data/combos.json', combosData, (err) => {
     const endTime = new Date();
     console.log('end: ' + endTime.toString(), 'duration: ' + new Date((endTime - startTime)).toISOString().slice(11, -1))
 });
+
+// const solutions = [];
+
+// function allSolutions(combosByWeight, solutionSet) {
+//     const nextCombosByWeight = combosByWeight.filter(element => {
+//         return !element.plateCombos.some(combo => solutionSet.contains(combo))
+//     })
+
+//     if (nextCombosByWeight.length === 0) {
+//         solutions.push(solutionSet);
+//         return;
+//     } else {
+//         nextCombosByWeight[0].plateCombos.forEach(plateCombo => {
+//             const nextSolutionSet = new PlateSet([...solutionSet.plates]);
+//             nextSolutionSet.merge(plateCombo);
+//             allSolutions(nextCombosByWeight, nextSolutionSet);
+//         })        
+//     }
+// }
+
+// allSolutions(allPlateCombosByWeight, new PlateSet([]));
+
+// solutions.sort((a, b) => a.totalPlates - b.totalPlates === 0 ? a.totalWeight - b.totalWeight : a.totalPlates - b.totalPlates).forEach(plateSet => plateSet.plates.sort((a, b) => a.weight - b.weight));
+
+// const solutionData = JSON.stringify(solutions, null, 4);
+
+
+// fs.writeFile('./data/solutions.json', solutionData, (err) => {
+//     if (err) {
+//         throw err;
+//     }
+//     console.log("solutions data is saved.");
+// });
+
